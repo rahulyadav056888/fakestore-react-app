@@ -152,11 +152,11 @@ export function HomeComponent() {
                 </nav>
                 <main className="col-lg-10 col-md-9 d-flex flex-wrap justify-content-around">
                     {products.map(product => (
-                        <div className="col-xs-10 col-sm-5 col-md-3 col-lg-3 col-xl-2 ms-1 mt-4" style={{ minHeight: '70vh', height: '70vh' }}>
-                            <div key={product.id} className="card p-2 h-100">
-                                <img src={product.image} alt={product.title} height="150" className="card-img-top" />
+                        <div className="col-10 col-sm-6 col-md-3 col-lg-4 col-xl-2 p-2">
+                            <div key={product.id} className="card h-100">
+                                <img src={product.image} alt={product.title} style={{ height: '150px', width: '100%', objectFit: 'contain' }} className="card-img-top" />
                                 <div className="card-header">
-                                    <p className="card-title" title={product.title} style={{ textWrap: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} >{product.title}</p>
+                                    <p className="card-title" title={product.title} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} >{product.title}</p>
                                 </div>
                                 <div className="card-body">
                                     <dl>
