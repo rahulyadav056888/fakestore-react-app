@@ -4,5 +4,6 @@ export interface FakestoreContract {
     image: string;
     price: number;
     description: string;
+    quantity: number;
     rating: { rate: number, count: 0 }
 }

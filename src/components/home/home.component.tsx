@@ -5,6 +5,7 @@ import { RootState } from "../../stores/store";
 import { addToCart, removeFromCart } from "../../slicers/CartSlicer";
 import { FakestoreContract } from "../../contracts/FakestoreContract";
 import Loader from "../loader/loader.component";
+import { Link } from "react-router-dom";
 export function HomeComponent() {
     const [categories, setCategories] = useState<string[]>([]);
     const [products, setProducts] = useState<FakestoreContract[]>([]);
@@ -30,7 +31,13 @@ export function HomeComponent() {
         setLoader(true);
         axios.get<FakestoreContract[]>(url)
             .then((response) => {
-                setProducts(response.data);
+                let itemArray = response.data;
+                itemArray = itemArray.map(item => {
+                    item.quantity = 1;
+                    return item;
+                });
+                setProducts(itemArray);
+
                 setLoader(false);
             })
             .catch((error) => {
@@ -94,13 +101,24 @@ export function HomeComponent() {
     return (<>
         {loader && <Loader />}
         <div className="container-fluid">
-            <header className="d-flex justify-content-between p-2 bg-dark text-white">
-                <div><h2>Fakestore</h2></div>
-                <div>
-                    <span className="me-4"><button onClick={() => handleHomeClick()} className="btn text-white">HOME</button></span>
-                    {categories.map(category => (
-                        <span key={category} className="me-4"><button onClick={() => handleCategoryClick(category)} className="btn btn-sm text-white">{category.toUpperCase()}</button></span>
-                    ))}
+            <header className="navbar navbar-expand-lg navbar-dark bg-dark sticky-navbar p-2">
+                <div className="container-fluid">
+                    <h2 className="navbar-brand">Fakestore</h2>
+                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
+                    </button>
+                    <div className="collapse navbar-collapse" id="navbarNav">
+                        <ul className="navbar-nav ms-5">
+                            <li key={'home'} className="nav-item">
+                                <button onClick={handleHomeClick} className="btn nav-link text-white">HOME</button>
+                            </li>
+                            {categories.map(category => (
+                                <li key={category} className="nav-item">
+                                    <button onClick={() => handleCategoryClick(category)} className="btn nav-link text-white">{category.toUpperCase()}</button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
                 <div style={{ position: 'relative' }}>
                     <button ref={buttonRef} onClick={() => setIsCartModalOpen(true)} className="btn btn-light position-relative">
@@ -122,6 +140,9 @@ export function HomeComponent() {
                                                     <div className="d-flex col-12 align-items-center" style={{ height: '10vh' }} >
                                                         <div className="col-8">
                                                             {item.title} - ${item.price}
+                                                        </div>
+                                                        <div className="col-2">
+                                                            <input className="form-control" type="number" readOnly value={item.quantity} />
                                                         </div>
                                                         <div className="ms-auto">
                                                             <button onClick={() => handleRemoveFromCart(item.id)} className="btn btn-danger">Remove</button>
@@ -154,18 +175,20 @@ export function HomeComponent() {
                     {products.map(product => (
                         <div className="col-10 col-sm-6 col-md-3 col-lg-4 col-xl-2 p-2">
                             <div key={product.id} className="card h-100">
-                                <img src={product.image} alt={product.title} style={{ height: '150px', width: '100%', objectFit: 'contain' }} className="card-img-top" />
-                                <div className="card-header">
-                                    <p className="card-title" title={product.title} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} >{product.title}</p>
-                                </div>
-                                <div className="card-body">
-                                    <dl>
-                                        <dt>Price</dt>
-                                        <dd>${product.price}</dd>
-                                        <dt>Rating</dt>
-                                        <dd><span className="bi bi-star-fill text-success"></span>{product.rating.rate} [{product.rating.count}]</dd>
-                                    </dl>
-                                </div>
+                                <Link to={`/view/${product.id}`} className="card-link">
+                                    <img src={product.image} alt={product.title} style={{ height: '150px', width: '100%', objectFit: 'contain' }} className="card-img-top" />
+                                    <div className="card-header">
+                                        <p className="card-title" title={product.title} style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} >{product.title}</p>
+                                    </div>
+                                    <div className="card-body">
+                                        <dl>
+                                            <dt>Price</dt>
+                                            <dd>${product.price}</dd>
+                                            <dt>Rating</dt>
+                                            <dd><span className="bi bi-star-fill text-success"></span>{product.rating.rate} [{product.rating.count}]</dd>
+                                        </dl>
+                                    </div>
+                                </Link>
                                 <div className="card-footer">
                                     <button onClick={() => handleAddToCartClick(product)} className="btn btn-danger w-100">
                                         <span className="bi bi-cart4"></span>Add to Cart

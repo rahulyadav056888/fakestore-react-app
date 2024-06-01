@@ -1,21 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import '../node_modules/bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import the Bootstrap JavaScript bundle
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { HomeComponent } from './components/home/home.component';
 import store from './stores/store';
 import { Provider } from 'react-redux';
-
+import './App.css'
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <HomeComponent />
+      <App />
     </Provider>
   </React.StrictMode>
 );

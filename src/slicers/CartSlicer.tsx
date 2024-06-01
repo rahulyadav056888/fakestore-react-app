@@ -16,7 +16,14 @@ const cartSlice = createSlice({
     initialState,
     reducers: {
         addToCart(state, action) {
-            state.cartItems.push(action.payload);
+            const cartItem = state.cartItems.find((item) => {
+                return item.id == action.payload.id
+            })
+            if (cartItem != undefined) {
+                cartItem.quantity += 1;
+            } else {
+                state.cartItems.push(action.payload);
+            }
             state.cartCount = state.cartItems.length;
         },
         removeFromCart(state, action) {
